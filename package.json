@@ -1,0 +1,32 @@
+{
+  "name": "toogl",
+  "version": "1.0.0",
+  "description": "2D WEBGL library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andi23rosca/toogl.git"
+  },
+  "keywords": [
+    "webgl",
+    "2d",
+    "easy",
+    "simple",
+    "fragment",
+    "shader"
+  ],
+  "author": "Andi Rosca",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andi23rosca/toogl/issues"
+  },
+  "homepage": "https://github.com/andi23rosca/toogl#readme",
+  "dependencies": {
+    "typescript": "^3.7.4"
+  }
+}
