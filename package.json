@@ -1,6 +1,6 @@
 {
   "name": "toogl",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "2D WEBGL library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,7 +26,8 @@
     "url": "https://github.com/andi23rosca/toogl/issues"
   },
   "homepage": "https://github.com/andi23rosca/toogl#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "typescript": "^3.7.4"
   }
 }

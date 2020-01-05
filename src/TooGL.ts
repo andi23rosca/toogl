@@ -6,6 +6,9 @@ import fullscreenVertexShaderSource from "./utils/fullscreenVertexShaderSource";
 import setupArrayBuffer from "./utils/setupArrayBuffer";
 import getRectangleArray from "./utils/getRectangleArray";
 import isPowerof2 from "./utils/isPowerOf2";
+import IUniformTypes from "./types/IUniformTypes";
+import UniformFunction from "./types/UniformFunction";
+import getUniformTypes from "./utils/getUniformTypes";
 
 export default class TooGL {
   gl: WebGLRenderingContext;
@@ -14,6 +17,8 @@ export default class TooGL {
   vertexShader: WebGLShader | undefined;
   fragmentShader: WebGLShader | undefined;
   program: WebGLProgram | undefined;
+
+  UTYPES: IUniformTypes;
 
   uniforms: {
     [key: string]: {
@@ -28,11 +33,16 @@ export default class TooGL {
   } = {};
   _textureOffset: number = -1;
 
+  structs: {
+    [key: string]: string[];
+  } = {};
+
   constructor({ gl, size, shader }: IGLConstructorOptions) {
     if (!gl) {
       throw new Error("WEBGL is not supported");
     }
     this.gl = gl;
+    this.UTYPES = getUniformTypes(gl);
     this.canvas = gl.canvas;
     this.resize(size);
 
@@ -118,11 +128,12 @@ export default class TooGL {
     this.gl.drawArrays(primitiveType, offset, count);
   }
 
-  addUniform(name: string, glFunction: Function) {
+  addUniform(name: string, glFunction: UniformFunction) {
     if (this.program) {
       const location = this.gl.getUniformLocation(this.program, name);
       this.uniforms[name] = {
         update: (...args: any[]) => {
+          //@ts-ignore
           glFunction.call(this.gl, location, ...args);
         }
       };
@@ -174,5 +185,20 @@ export default class TooGL {
       );
     }
     this.updateUniform(name, this._textureOffset);
+  }
+
+  addStruct(name: string, config: { [key: string]: UniformFunction }) {
+    const props = Object.keys(config);
+    this.structs[name] = props;
+
+    props.forEach(p => {
+      this.addUniform(`${name}.${p}`, config[p]);
+    });
+  }
+
+  updateStruct(name: string, obj: { [key: string]: any }) {
+    this.structs[name].forEach(p => {
+      this.updateUniform(`${name}.${p}`, obj[p]);
+    });
   }
 }
