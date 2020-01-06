@@ -144,15 +144,21 @@ export default class TooGL {
   }
 
   addTexture(name: string, image: TexImageSource) {
-    this._textureOffset++;
+    let offset = 0;
+    if (this.textures[name]) {
+      offset = this.textures[name].offset;
+    } else {
+      this._textureOffset++;
+      offset = this._textureOffset;
 
-    this.textures[name] = {
-      offset: this._textureOffset
-    };
+      this.textures[name] = {
+        offset
+      };
+    }
 
     this.addUniform(name, this.gl.uniform1i);
     const texture = this.gl.createTexture();
-    this.gl.activeTexture(this.gl.TEXTURE0 + this._textureOffset);
+    this.gl.activeTexture(this.gl.TEXTURE0 + offset);
     this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
     this.gl.texImage2D(
       this.gl.TEXTURE_2D,
@@ -184,7 +190,7 @@ export default class TooGL {
         this.gl.LINEAR
       );
     }
-    this.updateUniform(name, this._textureOffset);
+    this.updateUniform(name, offset);
   }
 
   addStruct(name: string, config: { [key: string]: UniformFunction }) {
